@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "event_id": "1d862629-ed26-4a14-9452-9acdbc5a9083",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "validation_recorded",
+  "occurred_at": "2026-09-22T04:43:06Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "53840f7a54fe47fc988f799945b779312cd84539",
+  "message": "Takeover review confirmed the current Phase 0 implementation still satisfies the documented acceptance structure. This session changed only task-ledger ownership; no verifier source files changed, so the prior automated validation evidence remains the implementation evidence.",
+  "changes": {
+    "validation_state": "reviewed_no_source_change",
+    "phase_boundary": "Do not start IWB adapter or UI automation until human acceptance of Phase 0."
+  },
+  "evidence": [
+    {
+      "kind": "source_review",
+      "paths": [
+        "AGENTS.md",
+        "runner/exact_sha.py",
+        "runner/execution.py",
+        "runner/state_store.py",
+        "runner/report_writer.py",
+        "runner/doctor.py",
+        "runner/self_test.py",
+        "adapters/base.py",
+        "schemas/suite.schema.json",
+        "schemas/report.schema.json",
+        "schemas/run-state.schema.json",
+        "tests/test_phase0.py"
+      ],
+      "summary": "Exact-SHA mismatch rejection, idempotent state, doctor, schema validation, reports, adapter boundary, diagnostics, and deterministic self-test are present."
+    },
+    {
+      "kind": "prior_validation",
+      "event_id": "846ff83f-706b-4b6a-89b4-a194ebb79ee8",
+      "summary": "Prior session recorded 5 passing tests and passing Phase 0 self-test after exact-SHA correction."
+    }
+  ],
+  "supersedes_event_id": null
+}
