@@ -28,6 +28,18 @@ source .venv/bin/activate
 python -m pip install -e '.[dev]'
 ```
 
+## Phase 0 acceptance validation
+
+Run validation through the active Python interpreter rather than a bare `pytest` executable. This guarantees that collection uses the same environment where Ioant Verify was installed:
+
+```bash
+python -m pytest -q
+python -m runner.main doctor --json
+python -m runner.main self-test --json
+```
+
+The repository governance file `.hero-skills.yaml` defines these interpreter-bound commands as the canonical Phase 0 validation path.
+
 ## Phase 0 commands
 
 Inspect prerequisites without changing system permissions:
