@@ -7,6 +7,9 @@ import json
 import sys
 from pathlib import Path
 
+from task_sync.ledger import active_projection
+
+from .checkout import VerifierCheckout
 from .configuration import load_config
 from .doctor import doctor
 from .execution import ExecutionEngine
@@ -42,6 +45,54 @@ def _validate_suite(args: argparse.Namespace) -> int:
     return 0
 
 
+def _prepare_checkout(args: argparse.Namespace) -> int:
+    config = load_config(args.config)
+    project_config = config["projects"].get(args.project, {})
+    repository_url = args.repository_url or project_config.get("repository_url")
+    if not repository_url:
+        raise ValueError("repository URL is required through --repository-url or project configuration")
+    allowed_branches = project_config.get("allowed_branches")
+    if allowed_branches and args.branch not in allowed_branches:
+        raise ValueError(f"branch {args.branch!r} is not allowlisted for project {args.project!r}")
+
+    result = VerifierCheckout(config["checkout_root"]).prepare(
+        project=args.project,
+        repository_url=repository_url,
+        branch=args.branch,
+        commit=args.commit.lower(),
+    )
+    payload = {
+        "project": result.project,
+        "path": str(result.path),
+        "branch": result.branch,
+        "requested_commit": result.requested_commit,
+        "tested_commit": result.tested_commit,
+        "origin_url": result.origin_url,
+    }
+    if args.json:
+        _print_json(payload)
+    else:
+        print(f"prepared {result.project}: {result.path}")
+        print(f"branch:    {result.branch}")
+        print(f"requested: {result.requested_commit}")
+        print(f"tested:    {result.tested_commit}")
+    return 0
+
+
+def _tasks_active(args: argparse.Namespace) -> int:
+    projection = active_projection(args.repo, args.project)
+    if args.json:
+        _print_json(projection)
+    else:
+        print(f"{projection['project']} active tasks @ {projection['ledger_commit']}")
+        for task in projection["tasks"]:
+            print(
+                f"{task['display_id']} {task['priority']} {task['status']} "
+                f"[{task['module'] or '-'}] {task['objective']}"
+            )
+    return 0
+
+
 def _run(args: argparse.Namespace) -> int:
     config = load_config(args.config)
     engine = ExecutionEngine(state_db=config["state_db"], report_root=config["report_root"], diagnostics_root=config["diagnostics_root"])
@@ -55,6 +106,10 @@ def _run(args: argparse.Namespace) -> int:
         print(f"{report['result'].upper()} {report['suite']} attempt={report['attempt']}")
         print(f"requested: {report['requested_commit']}")
         print(f"tested:    {report['tested_commit']}")
+        if report.get("ledger_commit"):
+            print(f"ledger:    {report['ledger_commit']}")
+        if report.get("task_refs"):
+            print(f"tasks:     {', '.join(report['task_refs'])}")
         print(f"report:    {record.report_dir}")
         if not created:
             print("idempotent: existing logical run returned")
@@ -102,6 +157,22 @@ def build_parser() -> argparse.ArgumentParser:
     validate = sub.add_parser("validate-suite", help="schema-validate a suite file")
     validate.add_argument("path")
     validate.set_defaults(func=_validate_suite)
+
+    prepare = sub.add_parser("prepare-checkout", help="prepare a verifier-owned clone at an exact commit")
+    prepare.add_argument("--project", required=True)
+    prepare.add_argument("--repository-url")
+    prepare.add_argument("--branch", default="main")
+    prepare.add_argument("--commit", required=True, help="full 40-character commit SHA")
+    prepare.add_argument("--json", action="store_true")
+    prepare.set_defaults(func=_prepare_checkout)
+
+    tasks = sub.add_parser("tasks", help="project canonical AI task ledger")
+    tasks_sub = tasks.add_subparsers(dest="tasks_command", required=True)
+    active = tasks_sub.add_parser("active", help="show incomplete tasks projected from .ai-work")
+    active.add_argument("--project", required=True)
+    active.add_argument("--repo", required=True)
+    active.add_argument("--json", action="store_true")
+    active.set_defaults(func=_tasks_active)
 
     run = sub.add_parser("run", help="run one exact-SHA suite")
     run.add_argument("--project", required=True)
