@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "event_id": "b2e1b321-0ae0-44b3-bd35-1a6fbca36a56",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "validation_recorded",
+  "occurred_at": "2026-09-22T16:19:00Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "e3c5749586557e24b6ad67081c9a86e338b32304",
+  "message": "Mac Phase 0 self-test rerun passed after the execution control-flow fix. Exact requested/tested SHA equality, duplicate idempotency, deliberate SHA mismatch rejection, rerun attempt increment, and JSON/Markdown report generation all passed.",
+  "changes": {
+    "validation_state": "partial_pass",
+    "next_action": "Confirm the canonical python -m pytest -q rerun and current doctor output before presenting Phase 0 for human acceptance."
+  },
+  "evidence": [
+    {
+      "kind": "mac_acceptance",
+      "summary": "Ioant Verify Phase 0 self-test: PASS. exact_sha_pass, idempotent_duplicate, mismatch_rejected_as_infra_error, retry_attempt_incremented, json_and_markdown_reports all PASS."
+    },
+    {
+      "kind": "exact_sha",
+      "requested_commit": "29166ede9db9619d85ed7e2f7ae25c900a82895b",
+      "tested_commit": "29166ede9db9619d85ed7e2f7ae25c900a82895b",
+      "mismatch_tested_commit": "768942e07f5cef3703a38f9e0bb2aa215aff3593"
+    }
+  ],
+  "supersedes_event_id": null
+}
