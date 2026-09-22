@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "event_id": "846ff83f-706b-4b6a-89b4-a194ebb79ee8",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "validation_recorded",
+  "occurred_at": "2026-09-22T04:31:14Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "vblvuhym"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "a92fb1439f4b32de71c4d874d751ffd2fd992b5f",
+  "message": "Phase 0 core validation passed after the exact-SHA transcription correction. Target-macOS permission state remains to be exercised on the user's Mac before later UI automation relies on it.",
+  "changes": {
+    "validation_state": "passed_with_platform_followup",
+    "automated_checks": {
+      "pytest": "5 passed",
+      "self_test": "PASS: exact SHA, idempotency, JSON/Markdown reports, mismatch rejection, retry attempt",
+      "doctor": "Core prerequisites PASS; current validation host is non-macOS so Xcode/Simulator and privacy permissions are not applicable or blocked here."
+    },
+    "compliance_review": {
+      "deterministic": "22 pass, 0 warning, 1 reviewer false-positive error",
+      "false_positive": "Pinned reviewer checks legacy branch fields while the pinned task protocol v2 uses development_branch.",
+      "manual_checks": {
+        "ai_task_history": "pass by source review",
+        "module_boundaries": "pass by source review",
+        "safe_checkout_boundary": "pass for Phase 0; runner inspects the supplied repo read-only and unattended checkout ownership begins in Phase 1"
+      }
+    }
+  },
+  "evidence": [
+    {
+      "kind": "test",
+      "command": "python -m pytest -q",
+      "summary": "5 passed"
+    },
+    {
+      "kind": "self_test",
+      "command": "python -m runner.main self-test --json",
+      "summary": "All five Phase 0 trust-chain checks passed."
+    },
+    {
+      "kind": "doctor",
+      "command": "python -m runner.main doctor --json",
+      "summary": "Core prerequisites passed; macOS-only checks unavailable on the current validation host."
+    },
+    {
+      "kind": "remote_blob",
+      "path": "runner/exact_sha.py",
+      "sha": "d07abab96e4adaf534b3e5b0d3ed4497581e24bd",
+      "summary": "Remote corrected source is byte-identical to the locally validated exact-SHA implementation."
+    },
+    {
+      "kind": "compliance_review",
+      "summary": "22 deterministic passes; one known reviewer/protocol-v2 compatibility false positive; three manual checks reviewed against source."
+    }
+  ],
+  "supersedes_event_id": null
+}

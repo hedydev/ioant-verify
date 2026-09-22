@@ -12,7 +12,8 @@ The current implementation priority is **Phase 0** from `hedydev/hero-skills/ide
 
 Read `.hero-skills.yaml` and the pinned Hero Skills revision before implementation. At minimum, apply:
 
-- `development-governance`;
+- `review-project-compliance` for project governance audits;
+- `development-governance` as the compact governance standard;
 - `track-ai-development-tasks` + `ai-development-task-tracking`;
 - `work-evidence-first` + `evidence-based-fixes` for defects;
 - `git-safe-delivery` + `git-delivery`;

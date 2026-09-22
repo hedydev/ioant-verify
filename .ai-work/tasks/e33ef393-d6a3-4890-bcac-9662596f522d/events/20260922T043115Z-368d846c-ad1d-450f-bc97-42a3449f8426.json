@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "event_id": "368d846c-ad1d-450f-bc97-42a3449f8426",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "status_changed",
+  "occurred_at": "2026-09-22T04:31:15Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "vblvuhym"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "a92fb1439f4b32de71c4d874d751ffd2fd992b5f",
+  "message": "Phase 0 implementation is ready for human acceptance; IWB-specific Phase 1 work remains intentionally deferred.",
+  "changes": {
+    "status": {
+      "from": "in_progress",
+      "to": "validation"
+    }
+  },
+  "evidence": [
+    {
+      "kind": "validation_event",
+      "event_id": "846ff83f-706b-4b6a-89b4-a194ebb79ee8"
+    }
+  ],
+  "supersedes_event_id": null
+}

@@ -12,7 +12,7 @@
   "hero": {
     "config": ".hero-skills.yaml",
     "required_skills": [
-      "development-governance",
+      "review-project-compliance",
       "track-ai-development-tasks",
       "work-evidence-first",
       "git-safe-delivery",
@@ -20,6 +20,7 @@
       "structure-modular-code"
     ],
     "required_standards": [
+      "development-governance",
       "ai-development-task-tracking",
       "evidence-based-fixes",
       "git-delivery",
