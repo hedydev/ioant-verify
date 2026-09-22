@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "event_id": "918f9d7a-6ae3-4f61-81e3-2fd7b36ac525",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "handoff_recorded",
+  "occurred_at": "2026-09-22T04:41:57Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "1f9caa2668708f65059c8889de961bb3cba084fe",
+  "message": "Took responsibility for the existing Phase 0 task from the latest main ledger. Revalidating the runner lifecycle before any IWB-specific adapter work.",
+  "changes": {
+    "current_ai_session_id": {
+      "from": "vblvuhym",
+      "to": "k7u0r3af"
+    },
+    "status": {
+      "from": "validation",
+      "to": "in_progress"
+    }
+  },
+  "evidence": [
+    {
+      "kind": "commit",
+      "sha": "7ae1029b8c4c7ee4cb6d5b5c097c81ec816806e7",
+      "summary": "Prior Phase 0 validation state reviewed before takeover."
+    }
+  ],
+  "supersedes_event_id": null
+}
