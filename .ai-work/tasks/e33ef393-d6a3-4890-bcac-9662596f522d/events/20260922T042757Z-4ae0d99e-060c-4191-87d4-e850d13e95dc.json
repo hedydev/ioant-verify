@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "event_id": "4ae0d99e-060c-4191-87d4-e850d13e95dc",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "progress_recorded",
+  "occurred_at": "2026-09-22T04:27:57Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "vblvuhym"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "3b76f0dd32b1a91cd97eb8f0c4b5847047c88aaa",
+  "message": "Post-write verification found a transcription defect in the exact Git peel f-string. The remote source used an undefined Python variable instead of a literal ^{commit} expression; correcting it to the locally validated implementation.",
+  "changes": {
+    "root_cause": "GitHub tree transcription dropped the doubled braces required inside the Python f-string.",
+    "affected_path": "runner/exact_sha.py"
+  },
+  "evidence": [
+    {
+      "kind": "remote_blob",
+      "path": "runner/exact_sha.py",
+      "sha": "8a7cd41e985ea93352fe26d5c0be6b6b2e331d4d",
+      "summary": "Post-write fetch exposed f\"{requested_input}^{commit}\"."
+    },
+    {
+      "kind": "local_validation",
+      "summary": "Corrected local implementation previously passed 5/5 tests and the deterministic self-test."
+    }
+  ],
+  "supersedes_event_id": null
+}

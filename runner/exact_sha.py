@@ -46,7 +46,7 @@ class ExactRevision:
         tested = cls._git(repo_path, "rev-parse", "--verify", "HEAD^{commit}").lower()
         requested_input = requested_commit.lower()
         try:
-            requested = cls._git(repo_path, "rev-parse", "--verify", f"{requested_input}^{commit}").lower()
+            requested = cls._git(repo_path, "rev-parse", "--verify", f"{requested_input}^{{commit}}").lower()
         except ExactRevisionError:
             return RevisionInspection(
                 repo_path,
