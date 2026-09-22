@@ -35,6 +35,8 @@ class ReportWriter:
             f"- **Result:** **{report['result'].upper()}**",
             f"- **Requested commit:** `{report['requested_commit']}`",
             f"- **Tested commit:** `{report['tested_commit'] or 'unavailable'}`",
+            f"- **Ledger commit:** `{report.get('ledger_commit') or 'not-applicable'}`",
+            f"- **Task refs:** `{', '.join(report.get('task_refs') or []) or 'none'}`",
             "",
             "## Cases",
             "",
