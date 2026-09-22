@@ -2,17 +2,31 @@
 
 from __future__ import annotations
 
+import platform
+import socket
 import subprocess
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any, Callable
 
 from adapters.base import ProjectAdapter, RunContext
+from ios.simulator import SimulatorController, SimulatorLease
+from runner.process_manager import ProcessManager
 from task_sync.ledger import active_projection, select_tasks
 
 
 class IwbAdapter(ProjectAdapter):
     name = "iwb"
+    bundle_id = "com.ioant.workbench.mobile"
+
+    def __init__(self) -> None:
+        self.processes = ProcessManager()
+        self.simulator = SimulatorController()
+        self.simulator_lease: SimulatorLease | None = None
+        self.simulator_launched = False
+        self._artifacts: list[Path] = []
 
     def _assert_layout(self, repo: Path) -> None:
         required = [
@@ -63,6 +77,33 @@ class IwbAdapter(ProjectAdapter):
             "failure_reason": None if passed else tail or "command failed without output",
         }
 
+    @staticmethod
+    def _port_available(port: int) -> bool:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            try:
+                sock.bind(("127.0.0.1", port))
+            except OSError:
+                return False
+        return True
+
+    @staticmethod
+    def _wait_for_metro(process: subprocess.Popen[str], port: int, timeout: float = 60.0) -> None:
+        deadline = time.monotonic() + timeout
+        last_error = "Metro did not become ready"
+        while time.monotonic() < deadline:
+            if process.poll() is not None:
+                raise RuntimeError(f"Metro exited before readiness with code {process.returncode}")
+            try:
+                with urllib.request.urlopen(f"http://127.0.0.1:{port}/status", timeout=1.0) as response:
+                    body = response.read().decode("utf-8", errors="replace").strip()
+                if body == "packager-status:running":
+                    return
+                last_error = f"unexpected Metro status response: {body!r}"
+            except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                last_error = str(exc)
+            time.sleep(0.25)
+        raise RuntimeError(f"Metro readiness timed out on port {port}: {last_error}")
+
     def identify_project(self, context: RunContext) -> dict[str, Any]:
         self._assert_layout(context.repo)
         projection = active_projection(context.repo, "iwb")
@@ -98,6 +139,7 @@ class IwbAdapter(ProjectAdapter):
             "iwb.prepare.mobile-deps": lambda params: self._mobile_deps(context),
             "iwb.validate.mobile-typecheck": lambda params: self._mobile_typecheck(context),
             "iwb.validate.mac-check": lambda params: self._mac_check(context),
+            "iwb.simulator.smoke": lambda params: self._simulator_smoke(context, params),
         }
         cases: list[dict[str, Any]] = []
         for action in [*suite.get("steps", []), *suite.get("assertions", [])]:
@@ -167,3 +209,120 @@ class IwbAdapter(ProjectAdapter):
             cwd=context.repo,
             command=["bash", "scripts/check_mac.sh"],
         )
+
+    def _simulator_smoke(self, context: RunContext, params: dict[str, Any]) -> dict[str, Any]:
+        started = time.perf_counter()
+        if platform.system() != "Darwin":
+            return {
+                "id": "simulator-smoke",
+                "title": "IWB Native app launches on iOS Simulator",
+                "result": "blocked",
+                "expected": "macOS with Xcode Simulator",
+                "observed": platform.system(),
+                "duration_seconds": max(0.0, time.perf_counter() - started),
+                "evidence": [],
+                "failure_reason": "Simulator automation requires macOS",
+            }
+        if context.artifact_dir is None:
+            raise RuntimeError("run artifact directory is unavailable")
+
+        port = int(params.get("port", 18082))
+        if port < 1 or port > 65535:
+            raise ValueError("simulator Metro port must be between 1 and 65535")
+        if not self._port_available(port):
+            return {
+                "id": "simulator-smoke",
+                "title": "IWB Native app launches on iOS Simulator",
+                "result": "blocked",
+                "expected": f"IV-owned Metro port {port} is free",
+                "observed": "port already in use",
+                "duration_seconds": max(0.0, time.perf_counter() - started),
+                "evidence": [],
+                "failure_reason": "IV will not reuse or kill an unknown process on its configured Metro port",
+            }
+
+        mobile_dir = context.repo / "apps" / "mobile"
+        requested_udid = params.get("udid")
+        if requested_udid is not None and not isinstance(requested_udid, str):
+            raise ValueError("simulator udid must be a string")
+
+        try:
+            device = self.simulator.select(udid=requested_udid)
+            self.simulator_lease = self.simulator.ensure_booted(device)
+
+            metro_log = context.artifact_dir / "metro.log"
+            self._artifacts.append(metro_log)
+            metro = self.processes.start(
+                "metro",
+                ["npm", "run", "start:metro", "--", "--host", "127.0.0.1", "--port", str(port)],
+                cwd=mobile_dir,
+                log_path=metro_log,
+            )
+            self._wait_for_metro(metro.process, port)
+
+            install_case = self._command_case(
+                case_id="simulator-install",
+                title="Build and install exact IWB revision on Simulator",
+                cwd=mobile_dir,
+                command=["npm", "run", "ios:simulator", "--", "--port", str(port)],
+            )
+            if install_case["result"] != "pass":
+                install_case["title"] = "IWB Native Simulator build/install"
+                return install_case
+
+            launch_output = self.simulator.launch(self.simulator_lease.device.udid, self.bundle_id)
+            self.simulator_launched = True
+            time.sleep(2.0)
+            screenshot = self.simulator.screenshot(
+                self.simulator_lease.device.udid,
+                context.artifact_dir / "simulator.png",
+            )
+            self._artifacts.append(screenshot)
+            return {
+                "id": "simulator-smoke",
+                "title": "IWB Native app launches on iOS Simulator",
+                "result": "pass",
+                "expected": self.bundle_id,
+                "observed": launch_output or "simctl launch succeeded",
+                "duration_seconds": max(0.0, time.perf_counter() - started),
+                "evidence": [
+                    f"simulator: {self.simulator_lease.device.name} ({self.simulator_lease.device.udid})",
+                    f"runtime: {self.simulator_lease.device.runtime}",
+                    f"metro_port: {port}",
+                    f"metro_log: {metro_log}",
+                    f"screenshot: {screenshot}",
+                ],
+                "failure_reason": None,
+            }
+        except Exception as exc:
+            return {
+                "id": "simulator-smoke",
+                "title": "IWB Native app launches on iOS Simulator",
+                "result": "infra_error",
+                "expected": "Simulator + IV-owned Metro + exact IWB build launch successfully",
+                "observed": type(exc).__name__,
+                "duration_seconds": max(0.0, time.perf_counter() - started),
+                "evidence": [str(path) for path in self._artifacts],
+                "failure_reason": str(exc),
+            }
+
+    def cleanup(self, context: RunContext) -> None:
+        errors: list[str] = []
+        if self.simulator_lease is not None and self.simulator_launched:
+            try:
+                self.simulator.terminate(self.simulator_lease.device.udid, self.bundle_id)
+            except Exception as exc:
+                errors.append(f"terminate app: {exc}")
+        try:
+            self.processes.stop_all()
+        except Exception as exc:
+            errors.append(f"stop managed processes: {exc}")
+        try:
+            self.simulator.shutdown_if_owned(self.simulator_lease)
+        except Exception as exc:
+            errors.append(f"shutdown owned Simulator: {exc}")
+        if errors:
+            raise RuntimeError("; ".join(errors))
+
+    def collect_diagnostics(self, context: RunContext) -> list[str]:
+        return [str(path) for path in self._artifacts if path.exists()]
