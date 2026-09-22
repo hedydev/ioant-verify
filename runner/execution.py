@@ -6,7 +6,7 @@ import platform
 from pathlib import Path
 from typing import Any
 
-from adapters.base import RunContext
+from adapters.base import ProjectAdapter, RunContext
 from adapters.registry import get_adapter
 
 from .diagnostics import DiagnosticSession
@@ -45,12 +45,17 @@ class ExecutionEngine:
 
         diagnostic = DiagnosticSession(self.diagnostics_root, record.run_id)
         diagnostic.event("run_started", operation_id=record.run_id, requested_commit=inspection.requested_commit, tested_commit=inspection.tested_commit, suite=suite["name"], attempt=record.attempt)
+        artifact_dir = self.reports.root / project / inspection.requested_commit / record.run_id / "artifacts"
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+
         started_at = record.started_at
         cases: list[dict[str, Any]] = []
         artifacts: list[str] = [str(diagnostic.path)]
         result = "infra_error"
         environment: dict[str, Any] = {"platform": platform.platform(), "python": platform.python_version(), "adapter": adapter_name}
         tested_commit = inspection.tested_commit
+        adapter: ProjectAdapter | None = None
+        context: RunContext | None = None
 
         try:
             self.state.transition(record.run_id, "QUEUED", "validated suite and reserved logical identity")
@@ -70,15 +75,20 @@ class ExecutionEngine:
                 raise ExactRevisionError(inspection.message)
 
             adapter = get_adapter(adapter_name)
-            context = RunContext(record.run_id, project, inspection.repo, inspection.requested_commit, tested_commit, mode)
+            context = RunContext(
+                record.run_id,
+                project,
+                inspection.repo,
+                inspection.requested_commit,
+                tested_commit,
+                mode,
+                artifact_dir,
+            )
             environment.update(adapter.identify_project(context))
             environment.update(adapter.suite_environment(context))
             adapter.prepare_revision(context)
             self.state.transition(record.run_id, "RUNNING", "adapter execution started")
             cases.extend(adapter.execute(context, suite))
-            self.state.transition(record.run_id, "COLLECTING", "collecting verifier-owned artifacts")
-            artifacts.extend(adapter.collect_diagnostics(context))
-            self.state.transition(record.run_id, "EVALUATING", "evaluating deterministic case results")
             result = _overall_result(cases)
         except ExactRevisionError as exc:
             result = "infra_error"
@@ -98,6 +108,26 @@ class ExecutionEngine:
                 })
             diagnostic.event("verifier_exception", operation_id=record.run_id, level="error", error_type=type(exc).__name__, message=str(exc))
 
+        if adapter is not None and context is not None:
+            try:
+                self.state.transition(record.run_id, "COLLECTING", "cleaning verifier-owned resources and collecting artifacts")
+                adapter.cleanup(context)
+                artifacts.extend(adapter.collect_diagnostics(context))
+            except Exception as exc:
+                result = "infra_error"
+                cases.append({
+                    "id": "adapter-cleanup",
+                    "title": "Verifier-owned resources clean up safely",
+                    "result": "infra_error",
+                    "expected": "adapter cleanup succeeds",
+                    "observed": type(exc).__name__,
+                    "duration_seconds": 0.0,
+                    "evidence": [str(diagnostic.path)],
+                    "failure_reason": str(exc),
+                })
+                diagnostic.event("adapter_cleanup_failed", operation_id=record.run_id, level="error", error_type=type(exc).__name__, message=str(exc))
+
+        self.state.transition(record.run_id, "EVALUATING", "evaluating deterministic case results")
         finished_at = utc_now()
         report = {
             "schema_version": 1,
