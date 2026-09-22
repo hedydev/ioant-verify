@@ -20,6 +20,7 @@ class IwbAdapter(ProjectAdapter):
             repo / ".hero-skills.yaml",
             repo / ".ai-work" / "tasks",
             repo / "apps" / "mobile" / "package.json",
+            repo / "apps" / "mobile" / "package-lock.json",
             repo / "scripts" / "check_mac.sh",
         ]
         missing = [str(path.relative_to(repo)) for path in required if not path.exists()]
@@ -94,6 +95,7 @@ class IwbAdapter(ProjectAdapter):
     def execute(self, context: RunContext, suite: dict[str, Any]) -> list[dict[str, Any]]:
         handlers: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
             "iwb.assert.active-tasks": lambda params: self._assert_active_tasks(context, params),
+            "iwb.prepare.mobile-deps": lambda params: self._mobile_deps(context),
             "iwb.validate.mobile-typecheck": lambda params: self._mobile_typecheck(context),
             "iwb.validate.mac-check": lambda params: self._mac_check(context),
         }
@@ -141,6 +143,14 @@ class IwbAdapter(ProjectAdapter):
             ],
             "failure_reason": None,
         }
+
+    def _mobile_deps(self, context: RunContext) -> dict[str, Any]:
+        return self._command_case(
+            case_id="mobile-deps",
+            title="IWB mobile dependencies match package-lock",
+            cwd=context.repo / "apps" / "mobile",
+            command=["npm", "ci"],
+        )
 
     def _mobile_typecheck(self, context: RunContext) -> dict[str, Any]:
         return self._command_case(
