@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "ai_session_id": "k7u0r3af",
+  "ai_name": "ChatGPT",
+  "display_name": "IV takeover development AI",
+  "role": "writer",
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "registered_at": "2026-09-22T04:41:57Z"
+}
