@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "name": "iwb-high-priority-static",
+  "version": 1,
+  "project": "iwb",
+  "task_refs": [
+    "IWB-001",
+    "IWB-003",
+    "IWB-004",
+    "IWB-006"
+  ],
+  "requires": {
+    "mac_app": false,
+    "ios_simulator": false,
+    "fixture": null
+  },
+  "steps": [
+    {
+      "id": "active-task-bindings",
+      "action": "iwb.assert.active-tasks",
+      "params": {
+        "task_ids": [
+          "IWB-001",
+          "IWB-003",
+          "IWB-004",
+          "IWB-006"
+        ]
+      }
+    },
+    {
+      "id": "mobile-typecheck",
+      "action": "iwb.validate.mobile-typecheck",
+      "params": {}
+    },
+    {
+      "id": "mac-check",
+      "action": "iwb.validate.mac-check",
+      "params": {}
+    }
+  ],
+  "assertions": [],
+  "artifacts": {
+    "screenshots": false,
+    "mac_log": true,
+    "ios_log": false,
+    "diagnostics": "on_failure"
+  },
+  "device_required_followups": [
+    "Simulator: verify IWB-001 natural vertical/horizontal scrolling, independent scroll-region targeting and preserved zoom-click coordinate mapping.",
+    "Simulator: verify IWB-003 duplicate bottom clipboard launcher is absent while the intended clipboard interactions remain reachable.",
+    "Simulator: verify IWB-004 tool visibility, persistent ordering and four-corner placement with top-right default.",
+    "Simulator-first only for this phase; physical-device automation is deferred.",
+    "Later physical-device validation is still required for IWB-006 real H.264 capture/send/decode performance and subjective image quality."
+  ]
+}
