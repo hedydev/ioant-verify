@@ -14,3 +14,16 @@ projects:
       - static
     suites:
       - demo-smoke
+
+  iwb:
+    adapter: iwb
+    repository_url: "git@github.com:hedydev/ioant-workbench-agent.git"
+    allowed_branches:
+      - main
+    supported_modes:
+      - static
+      - mac
+      - simulator
+      - mac+simulator
+    suites:
+      - iwb-high-priority-static
