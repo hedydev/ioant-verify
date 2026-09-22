@@ -22,7 +22,7 @@ dev = [
 ioant-verify = "runner.main:main"
 
 [tool.setuptools.packages.find]
-include = ["runner*", "adapters*", "schemas*", "config*", "task_sync*"]
+include = ["runner*", "adapters*", "schemas*", "config*", "task_sync*", "ios*"]
 
 [tool.setuptools.package-data]
 schemas = ["*.json"]
