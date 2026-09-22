@@ -28,6 +28,11 @@
       }
     },
     {
+      "id": "mobile-deps",
+      "action": "iwb.prepare.mobile-deps",
+      "params": {}
+    },
+    {
       "id": "mobile-typecheck",
       "action": "iwb.validate.mobile-typecheck",
       "params": {}
