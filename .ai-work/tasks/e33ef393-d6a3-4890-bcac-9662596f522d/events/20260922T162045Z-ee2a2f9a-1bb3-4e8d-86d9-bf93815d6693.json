@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "event_id": "ee2a2f9a-1bb3-4e8d-86d9-bf93815d6693",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "status_changed",
+  "occurred_at": "2026-09-22T16:20:45Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "8f44fa7b1a4d1a73e6e1a1e1d0dcaeb97394240c",
+  "message": "All Phase 0 automated validation evidence is present. Awaiting explicit human acceptance before task completion.",
+  "changes": {
+    "status": {
+      "from": "validation",
+      "to": "awaiting_user_acceptance"
+    },
+    "next_action": "Wait for explicit user acceptance of the presented Phase 0 acceptance table."
+  },
+  "evidence": [
+    {
+      "kind": "validation_event",
+      "event_id": "fd8f7b5c-1ef1-4a4e-bcf2-bfd2c3d66e8a"
+    }
+  ],
+  "supersedes_event_id": null
+}
