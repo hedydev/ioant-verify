@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "event_id": "b2ab733d-d5ad-47d2-8dae-1e8f2b78624b",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "status_changed",
+  "occurred_at": "2026-09-22T04:43:06Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "13c81f4793f2de82f3f9f5201c1faf7da1c46e6d",
+  "message": "Returned the Phase 0 task to validation after takeover review. Human acceptance remains the gate before IWB-specific Phase 1 work.",
+  "changes": {
+    "status": {
+      "from": "in_progress",
+      "to": "validation"
+    },
+    "next_action": "Human acceptance of Phase 0, then implement verifier-owned checkout and IWB adapter work."
+  },
+  "evidence": [
+    {
+      "kind": "validation_event",
+      "event_id": "1d862629-ed26-4a14-9452-9acdbc5a9083"
+    }
+  ],
+  "supersedes_event_id": null
+}
