@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "event_id": "bbbeab11-a2e6-49be-949b-cf3cbbc5d3a3",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "task_created",
+  "occurred_at": "2026-09-22T04:18:05Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "vblvuhym"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "8f75a935b1d61ae3b0e3bd13467dafc4c14481eb",
+  "message": "Created the Phase 0 foundation task after initializing repository governance.",
+  "changes": {
+    "status": {
+      "from": null,
+      "to": "in_progress"
+    }
+  },
+  "evidence": [
+    {
+      "kind": "git_commit",
+      "sha": "8f75a935b1d61ae3b0e3bd13467dafc4c14481eb",
+      "summary": "Governance root commit"
+    }
+  ],
+  "supersedes_event_id": null
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": 2,
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "created_at": "2026-09-22T04:18:05Z",
+  "created_by": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "vblvuhym"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "objective": "Establish Ioant Verify Phase 0 trust chain before any IWB-specific automation.",
+  "scope": [
+    "governance",
+    "CLI",
+    "schemas",
+    "runner",
+    "state store",
+    "reporting",
+    "adapter contract",
+    "doctor",
+    "self-test"
+  ],
+  "target_ids": [],
+  "acceptance_criteria": [
+    "doctor returns useful prerequisite and permission state without bypassing system security",
+    "configuration, suite, report and run-state schemas validate their artifacts",
+    "demo smoke suite emits deterministic PASS JSON and Markdown reports with identical requested/tested exact SHAs",
+    "duplicate logical runs are idempotent and explicit reruns increment attempt",
+    "a deliberate exact-SHA mismatch is classified as INFRA_ERROR and preserves both SHAs",
+    "generic adapter contract exists with no IWB-specific implementation",
+    "Phase 0 self-test and unit tests pass"
+  ],
+  "deduplication_key": "ioant-verify-phase0-foundation",
+  "parent_task_id": null,
+  "relations": []
+}

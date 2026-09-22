@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "project": {
+    "name": "ioant-verify",
+    "platforms": [
+      "macos"
+    ],
+    "architecture": [
+      "python-cli-worker"
+    ]
+  },
+  "hero": {
+    "config": ".hero-skills.yaml",
+    "required_skills": [
+      "development-governance",
+      "track-ai-development-tasks",
+      "work-evidence-first",
+      "git-safe-delivery",
+      "build-diagnostic-sessions",
+      "structure-modular-code"
+    ],
+    "required_standards": [
+      "ai-development-task-tracking",
+      "evidence-based-fixes",
+      "git-delivery",
+      "diagnostic-sessions",
+      "code-modularity"
+    ]
+  },
+  "required_files": [
+    "AGENTS.md",
+    ".hero-skills.yaml",
+    "docs/ARCHITECTURE.md",
+    "docs/DIAGNOSTICS.md"
+  ],
+  "source": {
+    "roots": [
+      "runner",
+      "adapters",
+      "schemas",
+      "config"
+    ],
+    "extensions": [
+      "py",
+      "json",
+      "sh",
+      "yaml"
+    ],
+    "exclude": [
+      ".git/**",
+      "reports/**",
+      ".hero-review/**",
+      "**/__pycache__/**"
+    ],
+    "large_file_warning_lines": 800
+  },
+  "evidence_checks": [
+    {
+      "id": "diagnostic-session",
+      "title": "Durable diagnostic-session implementation",
+      "paths": [
+        "runner/**"
+      ],
+      "patterns": [
+        "session_id",
+        "operation_id",
+        "diagnostic"
+      ],
+      "minimum_matches": 2,
+      "severity": "error"
+    },
+    {
+      "id": "exact-sha",
+      "title": "Exact revision identity is enforced",
+      "paths": [
+        "runner/**",
+        "tests/**"
+      ],
+      "patterns": [
+        "requested_commit",
+        "tested_commit",
+        "ExactRevision"
+      ],
+      "minimum_matches": 3,
+      "severity": "error"
+    }
+  ],
+  "manual_checks": [
+    {
+      "id": "ai-task-history",
+      "title": "AI development task ledger is append-only and independently attributed",
+      "reference": "track-ai-development-tasks + ai-development-task-tracking"
+    },
+    {
+      "id": "module-boundaries",
+      "title": "Runner, state, report, schema and adapter responsibilities remain separated",
+      "reference": "structure-modular-code + code-modularity"
+    },
+    {
+      "id": "safe-checkout-boundary",
+      "title": "Unattended verification never mutates a user's active product worktree",
+      "reference": "Ioant Verify concept"
+    }
+  ],
+  "local_ai_artifacts": {
+    "output_directory": ".hero-review",
+    "gitignore_patterns": [
+      ".hero-review/"
+    ],
+    "exclude_from_hero_promotion": [
+      "docs/*HANDOFF*.md",
+      "docs/*CURRENT_STATE*.md",
+      "work/**",
+      "tmp/**"
+    ]
+  }
+}

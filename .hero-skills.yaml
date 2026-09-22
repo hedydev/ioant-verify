@@ -1,0 +1,39 @@
+version: 1
+
+source:
+  repo: hedydev/hero-skills
+  ref: a23d4baab0ff0230198d0158a851ebc07e06d498
+  local_path: ../hero-skills
+
+required:
+  skills:
+    - development-governance
+    - track-ai-development-tasks
+    - work-evidence-first
+    - git-safe-delivery
+    - build-diagnostic-sessions
+    - structure-modular-code
+  standards:
+    - ai-development-task-tracking
+    - evidence-based-fixes
+    - git-delivery
+    - diagnostic-sessions
+    - code-modularity
+
+project:
+  ai_entry: AGENTS.md
+  collaboration:
+    mode: single-writer
+    patch_handoff: explicit-only
+  diagnostics_profiles:
+    - cli-worker
+  validation:
+    - python -m pytest -q
+    - python -m runner.main self-test --json
+    - python -m runner.main doctor --json
+
+contribution:
+  discover_reusable_knowledge: true
+  target_repo: hedydev/hero-skills
+  require_user_approval_before_commit: true
+  require_user_approval_before_push: true

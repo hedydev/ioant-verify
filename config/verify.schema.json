@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ioant.dev/verify/config.schema.json",
+  "title": "Ioant Verify local configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "state_db",
+    "report_root",
+    "diagnostics_root",
+    "checkout_root",
+    "projects"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "state_db": {
+      "type": "string",
+      "minLength": 1
+    },
+    "report_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "diagnostics_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checkout_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projects": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "adapter",
+          "allowed_branches",
+          "supported_modes",
+          "suites"
+        ],
+        "properties": {
+          "adapter": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "repository_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "allowed_branches": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "supported_modes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "none",
+                "static",
+                "simulator",
+                "mac",
+                "mac+simulator",
+                "device-required",
+                "manual-only"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "suites": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}

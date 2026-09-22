@@ -1,0 +1,25 @@
+{
+  "schema_version": 2,
+  "event_id": "40fb65c2-a018-44fc-98cb-06d52780238d",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "progress_recorded",
+  "occurred_at": "2026-09-22T04:18:10Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "vblvuhym"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "8f75a935b1d61ae3b0e3bd13467dafc4c14481eb",
+  "message": "Phase 0 implementation prepared around exact-SHA enforcement, schema validation, SQLite idempotency, adapter isolation, reports, diagnostics, doctor and self-test.",
+  "changes": {},
+  "evidence": [
+    {
+      "kind": "design",
+      "path": "docs/ARCHITECTURE.md",
+      "summary": "Phase 0 boundaries and exact revision contract"
+    }
+  ],
+  "supersedes_event_id": null
+}

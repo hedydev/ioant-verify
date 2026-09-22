@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "name": "demo-smoke",
+  "version": 1,
+  "project": "demo",
+  "requires": {
+    "mac_app": false,
+    "ios_simulator": false,
+    "fixture": null
+  },
+  "steps": [
+    {
+      "id": "identity",
+      "action": "demo.capture_identity",
+      "params": {}
+    }
+  ],
+  "assertions": [
+    {
+      "id": "exact-sha",
+      "action": "demo.assert_exact_sha",
+      "params": {}
+    }
+  ],
+  "artifacts": {
+    "screenshots": false,
+    "mac_log": false,
+    "ios_log": false,
+    "diagnostics": "always"
+  },
+  "device_required_followups": []
+}

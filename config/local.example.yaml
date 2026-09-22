@@ -1,0 +1,16 @@
+schema_version: 1
+state_db: "~/Library/Application Support/IoantVerify/state/state.sqlite3"
+report_root: "~/Library/Application Support/IoantVerify/reports"
+diagnostics_root: "~/Library/Application Support/IoantVerify/diagnostics"
+checkout_root: "~/Library/Application Support/IoantVerify/checkouts"
+
+projects:
+  demo:
+    adapter: demo
+    repository_url: null
+    allowed_branches:
+      - main
+    supported_modes:
+      - static
+    suites:
+      - demo-smoke
