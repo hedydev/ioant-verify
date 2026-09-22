@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "event_id": "16d54bad-b59a-415b-818d-383d322c64f2",
+  "task_id": "07385f74-868d-4489-8f8b-96e98e523780",
+  "event_type": "task_created",
+  "occurred_at": "2026-09-22T16:26:01Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "e8388b27e3a4316c11c01d23ce285fcace4df484",
+  "message": "Created IV-002 for the IWB Phase 1 acceptance foundation after Phase 0 acceptance.",
+  "changes": {
+    "display_id": {"from": null, "to": "IV-002"},
+    "task_type": {"from": null, "to": "infrastructure"},
+    "module": {"from": null, "to": "IWB Adapter / Acceptance"},
+    "status": {"from": null, "to": "in_progress"},
+    "priority": {"from": null, "to": "P1"},
+    "verification_methods": {
+      "from": null,
+      "to": [
+        "python -m pytest -q",
+        "ioant-verify prepare-checkout",
+        "ioant-verify tasks active",
+        "ioant-verify run --adapter iwb",
+        "simulator"
+      ]
+    },
+    "next_action": {
+      "from": null,
+      "to": "Implement canonical IWB ledger projection and verifier-owned exact checkout, then bind the first static IWB suite before adding Simulator interaction."
+    }
+  },
+  "evidence": [
+    {
+      "kind": "iwb_ledger",
+      "source": "hedydev/ioant-workbench-agent@e1c58ed33e76cee79a1878679f88892c3b73d15e",
+      "summary": "IWB-001, IWB-003, IWB-004 and IWB-006 are current high-value automated-validation targets; IWB-008 explicitly waits for the IV adapter/suite baseline."
+    }
+  ],
+  "supersedes_event_id": null
+}
