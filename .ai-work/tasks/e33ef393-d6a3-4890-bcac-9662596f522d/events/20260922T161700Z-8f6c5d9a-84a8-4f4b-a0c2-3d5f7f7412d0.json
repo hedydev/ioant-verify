@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "event_id": "8f6c5d9a-84a8-4f4b-a0c2-3d5f7f7412d0",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "validation_recorded",
+  "occurred_at": "2026-09-22T16:17:00Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "e87252ed2e46359495962e0ea98926d78beb5a36",
+  "message": "Mac Phase 0 acceptance evidence: doctor reported READY and the deterministic self-test passed all exact-SHA/idempotency/report checks. The initial test collection used a bare pytest command and failed to import runner; repository governance already requires python -m pytest. A separate SyntaxWarning from return inside finally was corrected in runner/execution.py, and README now documents the canonical interpreter-bound validation command. Phase 0 remains in validation pending one clean Mac rerun of the canonical unit-test command.",
+  "changes": {
+    "validation_state": "partial_pass",
+    "next_action": "On the Mac, update to current main and run python -m pytest -q, then rerun doctor and self-test to confirm the warning is gone."
+  },
+  "evidence": [
+    {
+      "kind": "mac_acceptance",
+      "summary": "ioant-verify doctor: READY; core python/git/jsonschema/yaml PASS; Xcode/simctl PASS; Accessibility and Screen Recording BLOCKED as expected for later suites."
+    },
+    {
+      "kind": "mac_acceptance",
+      "summary": "ioant-verify self-test: PASS for exact_sha_pass, idempotent_duplicate, mismatch_rejected_as_infra_error, retry_attempt_incremented, and json_and_markdown_reports."
+    },
+    {
+      "kind": "failure",
+      "summary": "Bare pytest -q failed during collection with ModuleNotFoundError: runner; canonical project validation is python -m pytest -q."
+    },
+    {
+      "kind": "commit",
+      "sha": "19e4d1f8f847df9fd8d112ead146dc05914b3fc5",
+      "summary": "Removed return from finally in execution path."
+    },
+    {
+      "kind": "commit",
+      "sha": "e87252ed2e46359495962e0ea98926d78beb5a36",
+      "summary": "Documented canonical interpreter-bound Phase 0 validation."
+    }
+  ],
+  "supersedes_event_id": null
+}
