@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "event_id": "5708b5e0-897b-479c-ba90-f86eb87869ed",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "acceptance_recorded",
+  "occurred_at": "2026-09-22T16:25:00Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "50706cd825e1e54b7a8b25410151651432617770",
+  "message": "After reviewing the completed Phase 0 acceptance evidence, the user directed Ioant Verify work to proceed into IWB task inspection and Phase 1 implementation. This is recorded as human authorization to continue past the Phase 0 gate.",
+  "changes": {
+    "acceptance": {
+      "from": "awaiting_user_acceptance",
+      "to": "accepted"
+    }
+  },
+  "evidence": [
+    {
+      "kind": "human_acceptance",
+      "source": "conversation",
+      "summary": "User instructed the IV stream to inspect current IWB work tasks and start executing the next work, after reviewing the Phase 0 validation results and simulator-first scope."
+    }
+  ],
+  "supersedes_event_id": null
+}
