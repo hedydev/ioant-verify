@@ -16,6 +16,7 @@ class RunContext:
     requested_commit: str
     tested_commit: str
     mode: str
+    artifact_dir: Path | None = None
 
 
 class ProjectAdapter(ABC):
