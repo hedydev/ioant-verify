@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "event_id": "fd8f7b5c-1ef1-4a4e-bcf2-bfd2c3d66e8a",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "validation_recorded",
+  "occurred_at": "2026-09-22T16:20:30Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "3ae37e3cb75f20bfb363e33d62fa298fdeb1ddc2",
+  "message": "Canonical Mac Phase 0 unit validation passed: python -m pytest -q completed with 5 passed. Combined with prior READY doctor and passing exact-SHA self-test, all Phase 0 automated acceptance criteria now have evidence.",
+  "changes": {
+    "validation_state": "passed",
+    "next_action": "Present the standard acceptance table and wait for explicit human acceptance before recording task completion."
+  },
+  "evidence": [
+    {
+      "kind": "test_result",
+      "command": "python -m pytest -q",
+      "summary": "5 passed in 0.86s"
+    },
+    {
+      "kind": "mac_acceptance",
+      "summary": "Prior doctor run reported READY with core and Xcode/Simulator tooling available; later-suite Accessibility and Screen Recording permissions remained blocked without affecting Phase 0."
+    },
+    {
+      "kind": "mac_acceptance",
+      "summary": "Prior Phase 0 self-test passed exact SHA identity, idempotency, mismatch rejection as INFRA_ERROR, retry attempt increment, and JSON/Markdown report generation."
+    }
+  ],
+  "supersedes_event_id": null
+}
