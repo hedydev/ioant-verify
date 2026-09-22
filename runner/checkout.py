@@ -70,8 +70,10 @@ class VerifierCheckout:
         requested = commit.lower()
         checkout = self.root / project
 
+        created = False
         if not checkout.exists():
             self._run("git", "clone", "--no-checkout", "--origin", "origin", repository_url, str(checkout))
+            created = True
         elif not (checkout / ".git").exists():
             raise ExactRevisionError(f"verifier checkout path is not a Git clone: {checkout}")
 
@@ -81,11 +83,12 @@ class VerifierCheckout:
                 f"verifier checkout origin mismatch: configured {configured_origin!r}, requested {repository_url!r}"
             )
 
-        dirty = self._run("git", "status", "--porcelain", "--untracked-files=all", cwd=checkout).stdout.strip()
-        if dirty:
-            raise ExactRevisionError(
-                f"verifier-owned checkout is unexpectedly dirty; refusing to discard evidence: {checkout}"
-            )
+        if not created:
+            dirty = self._run("git", "status", "--porcelain", "--untracked-files=all", cwd=checkout).stdout.strip()
+            if dirty:
+                raise ExactRevisionError(
+                    f"verifier-owned checkout is unexpectedly dirty; refusing to discard evidence: {checkout}"
+                )
 
         self._run(
             "git",
