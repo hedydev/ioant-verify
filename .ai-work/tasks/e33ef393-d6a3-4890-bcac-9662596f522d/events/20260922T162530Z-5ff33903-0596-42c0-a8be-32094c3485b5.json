@@ -1,0 +1,37 @@
+{
+  "schema_version": 2,
+  "event_id": "5ff33903-0596-42c0-a8be-32094c3485b5",
+  "task_id": "e33ef393-d6a3-4890-bcac-9662596f522d",
+  "event_type": "task_completed",
+  "occurred_at": "2026-09-22T16:25:30Z",
+  "actor": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "observed_commit": "84ab1a869ef40c49d80c3111dd8a9b12b0d57745",
+  "message": "Completed Ioant Verify Phase 0 after passing canonical Mac validation and receiving user authorization to proceed to IWB Phase 1.",
+  "changes": {
+    "status": {
+      "from": "awaiting_user_acceptance",
+      "to": "completed"
+    },
+    "next_action": {
+      "from": "Wait for explicit user acceptance of the presented Phase 0 acceptance table.",
+      "to": "Begin Phase 1 with IWB ledger projection, verifier-owned exact checkout, IWB adapter, and simulator-first acceptance."
+    }
+  },
+  "evidence": [
+    {
+      "kind": "human_acceptance",
+      "event_id": "5708b5e0-897b-479c-ba90-f86eb87869ed"
+    },
+    {
+      "kind": "validation",
+      "summary": "Mac doctor READY; canonical python -m pytest -q passed 5 tests; Phase 0 self-test passed exact SHA, idempotency, mismatch rejection, retry attempt and report generation."
+    }
+  ],
+  "supersedes_event_id": null
+}
