@@ -105,6 +105,8 @@ class ExecutionEngine:
             "project": project,
             "requested_commit": inspection.requested_commit,
             "tested_commit": tested_commit,
+            "ledger_commit": environment.get("ledger_commit"),
+            "task_refs": list(suite.get("task_refs") or []),
             "suite": suite["name"],
             "suite_version": suite["version"],
             "attempt": record.attempt,
