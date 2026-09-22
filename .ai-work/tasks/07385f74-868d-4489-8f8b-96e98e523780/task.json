@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "task_id": "07385f74-868d-4489-8f8b-96e98e523780",
+  "display_id": "IV-002",
+  "created_at": "2026-09-22T16:26:00Z",
+  "created_by": {
+    "actor_type": "ai",
+    "ai_name": "ChatGPT",
+    "ai_session_id": "k7u0r3af"
+  },
+  "ledger_branch": "main",
+  "development_branch": "main",
+  "objective": "Establish the IWB Phase 1 acceptance foundation: read the canonical IWB task ledger, prepare verifier-owned exact-SHA checkouts, add an IWB adapter, and support static/Mac plus simulator-first suite execution without real-device claims.",
+  "scope": [
+    "runner/checkout.py",
+    "task_sync",
+    "adapters/iwb",
+    "schemas",
+    "runner/main.py",
+    "tests",
+    "docs"
+  ],
+  "target_ids": [],
+  "acceptance_criteria": [
+    "IV can project active IWB tasks from the verifier-owned checkout and expose the exact ledger commit represented.",
+    "IV prepares an isolated IWB clone/check-out at an exact requested SHA without mutating the user's active IWB worktree.",
+    "The IWB adapter contains IWB-specific commands and paths while the generic runner remains product-neutral.",
+    "The first IWB suite can execute canonical Mac/mobile static validation and bind evidence to IWB task IDs.",
+    "Simulator requirements and device-required follow-ups remain explicitly separated; physical-device automation is deferred.",
+    "Reports expose the represented IWB ledger commit, exact tested commit, task references and run identity."
+  ],
+  "deduplication_key": "ioant-verify:phase1:iwb-foundation",
+  "parent_task_id": null,
+  "relations": []
+}
