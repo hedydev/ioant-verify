@@ -97,27 +97,27 @@ class ExecutionEngine:
                     "failure_reason": str(exc),
                 })
             diagnostic.event("verifier_exception", operation_id=record.run_id, level="error", error_type=type(exc).__name__, message=str(exc))
-        finally:
-            finished_at = utc_now()
-            report = {
-                "schema_version": 1,
-                "run_id": record.run_id,
-                "project": project,
-                "requested_commit": inspection.requested_commit,
-                "tested_commit": tested_commit,
-                "suite": suite["name"],
-                "suite_version": suite["version"],
-                "attempt": record.attempt,
-                "mode": mode,
-                "started_at": started_at,
-                "finished_at": finished_at,
-                "result": result,
-                "environment": environment,
-                "cases": cases,
-                "artifacts": artifacts,
-                "device_required_followups": suite["device_required_followups"],
-            }
-            run_dir = self.reports.write(report)
-            record = self.state.finish(record.run_id, result=result.upper(), tested_commit=tested_commit, report_dir=str(run_dir))
-            diagnostic.event("run_finished", operation_id=record.run_id, result=result, report_dir=str(run_dir))
-            return record, report, True
+
+        finished_at = utc_now()
+        report = {
+            "schema_version": 1,
+            "run_id": record.run_id,
+            "project": project,
+            "requested_commit": inspection.requested_commit,
+            "tested_commit": tested_commit,
+            "suite": suite["name"],
+            "suite_version": suite["version"],
+            "attempt": record.attempt,
+            "mode": mode,
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "result": result,
+            "environment": environment,
+            "cases": cases,
+            "artifacts": artifacts,
+            "device_required_followups": suite["device_required_followups"],
+        }
+        run_dir = self.reports.write(report)
+        record = self.state.finish(record.run_id, result=result.upper(), tested_commit=tested_commit, report_dir=str(run_dir))
+        diagnostic.event("run_finished", operation_id=record.run_id, result=result, report_dir=str(run_dir))
+        return record, report, True
