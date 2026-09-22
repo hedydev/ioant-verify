@@ -7,7 +7,6 @@ import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 
 @dataclass(frozen=True)
@@ -80,18 +79,21 @@ class SimulatorController:
             if len(matches) != 1:
                 raise RuntimeError(f"requested Simulator UDID is not uniquely available: {udid}")
             return matches[0]
-
-        booted = [device for device in devices if device.state == "Booted"]
-        if len(booted) > 1:
-            names = ", ".join(f"{device.name} ({device.udid})" for device in booted)
-            raise RuntimeError(f"multiple booted iPhone Simulators; specify a UDID: {names}")
-        if len(booted) == 1:
-            return booted[0]
         if not devices:
             raise RuntimeError(f"no available Simulator matches prefix {name_prefix!r}")
 
-        devices.sort(key=lambda device: (_runtime_key(device.runtime), device.name, device.udid), reverse=True)
-        return devices[0]
+        # Prefer a shutdown device so IV owns the boot lifecycle instead of
+        # commandeering a Simulator the user already has open.
+        shutdown = [device for device in devices if device.state != "Booted"]
+        if shutdown:
+            shutdown.sort(key=lambda device: (_runtime_key(device.runtime), device.name, device.udid), reverse=True)
+            return shutdown[0]
+
+        booted = [device for device in devices if device.state == "Booted"]
+        if len(booted) == 1:
+            return booted[0]
+        names = ", ".join(f"{device.name} ({device.udid})" for device in booted)
+        raise RuntimeError(f"multiple booted iPhone Simulators; specify a UDID: {names}")
 
     def ensure_booted(self, device: SimulatorDevice) -> SimulatorLease:
         if device.state == "Booted":
@@ -112,10 +114,7 @@ class SimulatorController:
         return self._run("launch", udid, bundle_id).stdout.strip()
 
     def terminate(self, udid: str, bundle_id: str) -> None:
-        completed = self._run("terminate", udid, bundle_id, check=False)
-        if completed.returncode not in (0, 3):
-            detail = completed.stderr.strip() or completed.stdout.strip()
-            raise RuntimeError(detail or f"failed to terminate {bundle_id}")
+        self._run("terminate", udid, bundle_id, check=False)
 
     def screenshot(self, udid: str, path: str | Path) -> Path:
         output = Path(path)
