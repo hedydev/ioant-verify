@@ -16,102 +16,50 @@
     "device_required_followups"
   ],
   "properties": {
-    "schema_version": {
-      "const": 1
-    },
-    "name": {
-      "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]*$"
-    },
-    "version": {
-      "type": "integer",
-      "minimum": 1
-    },
-    "project": {
-      "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    "schema_version": {"const": 1},
+    "name": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "version": {"type": "integer", "minimum": 1},
+    "project": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "task_refs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
     },
     "requires": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "mac_app": {
-          "type": "boolean"
-        },
-        "ios_simulator": {
-          "type": "boolean"
-        },
-        "fixture": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
+        "mac_app": {"type": "boolean"},
+        "ios_simulator": {"type": "boolean"},
+        "fixture": {"type": ["string", "null"]}
       }
     },
-    "steps": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/action"
-      }
-    },
-    "assertions": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/action"
-      }
-    },
+    "steps": {"type": "array", "items": {"$ref": "#/$defs/action"}},
+    "assertions": {"type": "array", "items": {"$ref": "#/$defs/action"}},
     "artifacts": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "screenshots": {
-          "type": "boolean"
-        },
-        "mac_log": {
-          "type": "boolean"
-        },
-        "ios_log": {
-          "type": "boolean"
-        },
-        "diagnostics": {
-          "enum": [
-            "never",
-            "on_failure",
-            "always"
-          ]
-        }
+        "screenshots": {"type": "boolean"},
+        "mac_log": {"type": "boolean"},
+        "ios_log": {"type": "boolean"},
+        "diagnostics": {"enum": ["never", "on_failure", "always"]}
       }
     },
     "device_required_followups": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
+      "items": {"type": "string", "minLength": 1}
     }
   },
   "$defs": {
     "action": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "id",
-        "action",
-        "params"
-      ],
+      "required": ["id", "action", "params"],
       "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
-        },
-        "action": {
-          "type": "string",
-          "pattern": "^[a-z0-9][a-z0-9_.-]*$"
-        },
-        "params": {
-          "type": "object"
-        }
+        "id": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"},
+        "action": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]*$"},
+        "params": {"type": "object"}
       }
     }
   }
