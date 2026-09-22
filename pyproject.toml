@@ -22,12 +22,13 @@ dev = [
 ioant-verify = "runner.main:main"
 
 [tool.setuptools.packages.find]
-include = ["runner*", "adapters*", "schemas*", "config*"]
+include = ["runner*", "adapters*", "schemas*", "config*", "task_sync*"]
 
 [tool.setuptools.package-data]
 schemas = ["*.json"]
 config = ["*.json", "*.yaml"]
 "adapters.demo.suites" = ["*.json"]
+"adapters.iwb.suites" = ["*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
